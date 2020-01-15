@@ -1,0 +1,58 @@
+# Treat all Go files in this repo as binary, with no git magic updating line endings. 
+# Windows users contributing to Go will need to use a modern version of git and editors capable of LF line endings.
+
+*.go -text diff=golang
+
+# Source code
+*.bash            text eol=lf
+*.bat             text eol=crlf
+*.cmd             text eol=crlf
+*.sh              text eol=lf
+*.sql             text eol=lf
+*.xml             text eol=lf
+*.ktr             text eol=lf
+*.kjb             text eol=lf
+
+# Configs
+*.cnf             text
+*.conf            text
+*.config          text
+.env              text
+.gitattributes    text
+.gitconfig        text
+*.yaml            text
+*.toml            text
+
+# Docker
+*.dockerignore    text
+Dockerfile        text
+
+# Documentation
+*.markdown        text
+*.md              text
+*.txt             text
+AUTHORS           text
+CHANGELOG         text
+CHANGES           text
+CONTRIBUTING      text
+COPYING           text
+copyright         text
+*COPYRIGHT*       text
+INSTALL           text
+license           text
+LICENSE           text
+NEWS              text
+readme            text
+*README*          text
+TODO              text
+
+# Executables
+*.exe             binary
+
+# Archives
+*.7z              binary
+*.gz              binary
+*.jar             binary
+*.rar             binary
+*.tar             binary
+*.zip             binary
