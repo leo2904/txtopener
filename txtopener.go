@@ -3,6 +3,7 @@
 // For all BOMbed files the BOM is stripped out.
 // All files without a BOM are treating with the reader provided by charset.NewReader() in order to get translated
 // from the original character encoding to UTF-8
+
 package txtopener
 
 import (
@@ -24,11 +25,11 @@ func Open(name string) (io.Reader, error) {
 
 // MustOpen calls os.Open and return a reader that converts the content to UTF-8 without BOM if the file could be opened successfully or panics otherwise
 func MustOpen(name string) io.Reader {
-	file, err := Open(name)
+	r, err := Open(name)
 	if err != nil {
 		panic(err)
 	}
-	return file
+	return r
 }
 
 // MustOpenAndClose calls os.Open and returns a reader that converts the content to UTF-8 without BOM
@@ -61,17 +62,19 @@ func NewReader(r io.Reader) io.Reader {
 
 	// discarding the utf-8 BOM mark (EF BB BF)
 	bom := make([]byte, 3)
-	if n, err := io.ReadFull(nr, bom); err != nil {
+	n, err := io.ReadFull(nr, bom)
+
+	if err != nil {
 		if n < len(bom) {
-			return nr
+			return bytes.NewReader(bom[:n])
 		}
 		if err != io.EOF {
 			panic(err)
 		}
 	}
+
 	if bom[0] != 0xef || bom[1] != 0xbb || bom[2] != 0xbf {
 		nr = io.MultiReader(bytes.NewReader(bom), nr)
 	}
-
 	return nr
 }
