@@ -12,11 +12,11 @@ import (
 	"testing"
 )
 
-var utf8bom = []byte{0xef, 0xbb, 0xbf}
-
-var utf16lebom = []byte{0xff, 0xfe}
-
-var utf16bebom = []byte{0xfe, 0xff}
+var (
+	utf8bom    = []byte{0xef, 0xbb, 0xbf}
+	utf16lebom = []byte{0xff, 0xfe}
+	utf16bebom = []byte{0xfe, 0xff}
+)
 
 type test struct {
 	feed     []byte
