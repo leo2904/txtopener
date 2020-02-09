@@ -14,24 +14,6 @@ import (
 	"golang.org/x/net/html/charset"
 )
 
-// Open calls os.Open and return a reader that converts the content to UTF-8 without BOM if the file could be opened successfully or an error otherwise
-func Open(name string) (io.Reader, error) {
-	file, err := os.Open(name)
-	if err != nil {
-		return nil, err
-	}
-	return NewReader(file), nil
-}
-
-// MustOpen calls os.Open and return a reader that converts the content to UTF-8 without BOM if the file could be opened successfully or panics otherwise
-func MustOpen(name string) io.Reader {
-	r, err := Open(name)
-	if err != nil {
-		panic(err)
-	}
-	return r
-}
-
 // MustOpenAndClose calls os.Open and returns a reader that converts the content to UTF-8 without BOM
 // and a function to close the file that calls sync before close or panics otherwise
 func MustOpenAndClose(name string) (io.Reader, func()) {
