@@ -3,6 +3,7 @@
 // For all BOMbed files the BOM is stripped out.
 // All files without a BOM are treating with the reader provided by charset.NewReader() in order to get translated
 // from the original character encoding to UTF-8
+
 package txtopener
 
 import (
@@ -12,24 +13,6 @@ import (
 
 	"golang.org/x/net/html/charset"
 )
-
-// Open calls os.Open and return a reader that converts the content to UTF-8 without BOM if the file could be opened successfully or an error otherwise
-func Open(name string) (io.Reader, error) {
-	file, err := os.Open(name)
-	if err != nil {
-		return nil, err
-	}
-	return NewReader(file), nil
-}
-
-// MustOpen calls os.Open and return a reader that converts the content to UTF-8 without BOM if the file could be opened successfully or panics otherwise
-func MustOpen(name string) io.Reader {
-	file, err := Open(name)
-	if err != nil {
-		panic(err)
-	}
-	return file
-}
 
 // MustOpenAndClose calls os.Open and returns a reader that converts the content to UTF-8 without BOM
 // and a function to close the file that calls sync before close or panics otherwise
@@ -69,9 +52,9 @@ func NewReader(r io.Reader) io.Reader {
 			return bytes.NewReader(bom[:n])
 		}
 	}
+
 	if bom[0] != 0xef || bom[1] != 0xbb || bom[2] != 0xbf {
 		nr = io.MultiReader(bytes.NewReader(bom), nr)
 	}
-
 	return nr
 }
