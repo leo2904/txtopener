@@ -62,11 +62,11 @@ func NewReader(r io.Reader) io.Reader {
 	// discarding the utf-8 BOM mark (EF BB BF)
 	bom := make([]byte, 3)
 	if n, err := io.ReadFull(nr, bom); err != nil {
-		if n < len(bom) {
-			return nr
-		}
-		if err != io.EOF {
+		if err != io.EOF && err != io.ErrUnexpectedEOF {
 			panic(err)
+		}
+		if n < len(bom) {
+			return bytes.NewReader(bom[:n])
 		}
 	}
 	if bom[0] != 0xef || bom[1] != 0xbb || bom[2] != 0xbf {

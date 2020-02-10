@@ -1,39 +1,42 @@
 package txtopener
 
 import (
-	"bufio"
-	"fmt"
-	"log"
-	"os"
-	"path/filepath"
+	"io/ioutil"
 	"strings"
 	"testing"
 )
 
-func TestOpener(t *testing.T) {
-	files, err := filepath.Glob(filepath.Join("testdata", "*.txt"))
-	if err != nil {
-		t.Fatal(err)
+var utf8bom = []byte{0xef, 0xbb, 0xbf}
+var utf16lebom = []byte{0xff, 0xfe}
+var utf16bebom = []byte{0xfe, 0xff}
+
+func TestNewReader(t *testing.T) {
+	var tests = []struct {
+		feed     string
+		expected string
+	}{
+		{"", ""},
+		{"a", "a"},
+		{"ab", "ab"},
+		{"abc", "abc"},
+		{"abcd", "abcd"},
+		{"Leonardo", "Leonardo"},
+		{"paral·lel", "paral·lel"},
+		{"façade", "façade"},
+		{`pingüino`, "pingüino"},
+		{string(utf8bom), ""},
+		{string(utf8bom) + "pingüino", "pingüino"},
+		{string(utf16lebom), ""},
+		{string(utf16bebom), ""},
 	}
 
-	for _, file := range files {
-		name := strings.TrimSuffix(filepath.Base(file), ".txt")
-		newFile := filepath.Join("testdata", "converted", name+"_UTF8.txt")
-		in, closeIn := MustOpenAndClose(file)
-		defer closeIn()
-
-		out, err := os.Create(newFile)
+	for i, tt := range tests {
+		got, err := ioutil.ReadAll(NewReader(strings.NewReader(tt.feed)))
 		if err != nil {
-			t.Fatal(err)
+			t.Errorf("error en ReadAll: %v", err)
 		}
-		defer out.Close()
-
-		scan := bufio.NewScanner(in)
-		for scan.Scan() {
-			_, err := fmt.Fprint(out, scan.Text())
-			if err != nil {
-				log.Println(err)
-			}
+		if string(got) != tt.expected {
+			t.Errorf("%d. feeded: %s -> got: %s - expected: %s", i, tt.feed, got, tt.expected)
 		}
 	}
 }
