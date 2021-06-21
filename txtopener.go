@@ -1,7 +1,7 @@
 // Package txtopener provides helper functions to read files encoded as UTF-8, BOMBed UTF-8, BOMBed UTF-16-LE,
 // BOMBed UTF-16-BE or any other known encoding as if they were UTF-8 files.
 // For all BOMbed files the BOM is stripped out.
-// All files without a BOM are treating with the reader provided by charset.NewReader() in order to get translated
+// All files without a BOM are treated with the reader provided by charset.NewReader() in order to get translated
 // from the original character encoding to UTF-8
 
 package txtopener
